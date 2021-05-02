@@ -1,10 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import zombieRoutes from './routes/index.js';
+import {hydrateDatabase} from "./database.js";
+
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors({origin: true, credentials: true}));
+
+hydrateDatabase();
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
@@ -15,32 +20,11 @@ app.use((req, res, next) => {
     next();
 });
 
-const locations = [
-    {
-        key: 'school-key',
-        label: 'School',
-        zombies: ['zs1','zs2','zs3','zs4','zs5','zs6']
-    },
-    {
-        key: 'warehouse-key',
-        label: 'Warehouse',
-        zombies: ['zw1','zw2','zw3','zw4']
-    },
-    {
-        key: 'hospital-key',
-        label: 'Hospital',
-        zombies: ['zs1','zs2','zs3','zs4']
-    },
-]
-
-app.get('/', (req, res, next) => {
-    res.status(200).send('Nice man!')
+app.get('/', (req, res) => {
+    res.status(200).send('API is working properly');
 });
 
-app.get('/locations', (req, res, next) => {
-    res.status(200).json(locations);
-});
-
+app.use('/', zombieRoutes);
 
 const PORT = process.env.PORT || 5000;
 
