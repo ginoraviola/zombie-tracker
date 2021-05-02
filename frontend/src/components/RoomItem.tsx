@@ -1,34 +1,36 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {IRoom} from "../screens/Home";
-
+import {IRoom} from '../screens/Home';
 
 interface IRoomProps {
-  navigation: Object,
+  navigation: Object;
   room: IRoom;
 }
 
-const RoomItem = (props) => {
+const RoomItem = props => {
   const navigation = useNavigation();
 
   const onEnterRoom = () => {
-    navigation.navigate('Room', {room: props.room });
-  }
+    navigation.navigate('Room', {room: props.room, locations: props.locations});
+  };
 
   return (
-      <TouchableOpacity
-          onPress={onEnterRoom}
-          style={[styles.room, {backgroundColor: "lightblue"}]}
-      >
-        <Text style={styles.label}>{props.label}</Text>
+    <TouchableOpacity
+      onPress={onEnterRoom}
+      style={[styles.room, {backgroundColor: 'lightblue'}]}>
+      <Text style={styles.label}>{props.label}</Text>
 
-        <View style={styles.counter}>
-          <Image source={require('../assets/zombie.png')}
-                 style={{height: 40, width: 40}}/>
-          <Text style={styles.zombieCount}>Count: {props.room.zombies.length}</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.counter}>
+        <Image
+          source={require('../assets/zombie.png')}
+          style={{height: 40, width: 40}}
+        />
+        <Text style={styles.zombieCount}>
+          Count: {props.room.zombies.length}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -54,11 +56,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     alignSelf: 'center',
-    flex: 1
+    flex: 1,
   },
   zombieCount: {
-    fontWeight: "bold"
-  }
+    fontWeight: 'bold',
+  },
 });
 
 export default RoomItem;

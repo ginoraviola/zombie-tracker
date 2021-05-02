@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import RoomItem from "../components/RoomItem";
+import RoomItem from '../components/RoomItem';
+import {getLocations} from '../api';
 
 export interface IRoom {
   key: number;
@@ -13,50 +13,48 @@ const Home = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-     fetchLocations();
-  }, []);
+  const fetchData = async () => {
+    const result = await getLocations();
+    await setLocations(result.data);
+    await setLoading(false);
+  };
 
-  const fetchLocations = async () => {
-    try {
-      const {data} = await axios.get(`http://192.168.1.22:5000/locations`);
-      console.log(data);
-      await setLocations([...data]);
-      await setLoading(false);
-    } catch (e) {
-      console.warn('Error fetching locations');
-    }
-  }
+  useEffect(() => {
+    fetchData();
+  }, [locations]);
 
   return loading ? (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="steelblue" />
-      </View>
+    <View style={[styles.container, styles.horizontal]}>
+      <ActivityIndicator size="large" color="steelblue" />
+    </View>
   ) : (
-      <>
-        <View style={styles.container}>
-          {locations.map(room => (
-              <RoomItem label={room.label}
-                        room={room}
-                        key={room.key}/>
-          ))}
-        </View>
-      </>
-  )
+    <>
+      <View style={styles.container}>
+        {locations.map((room: IRoom) => (
+          <RoomItem
+            label={room.label}
+            locations={locations}
+            room={room}
+            key={room.key}
+          />
+        ))}
+      </View>
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
   horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
   },
   container: {
-    justifyContent: "center",
+    justifyContent: 'center',
     flex: 1,
     flexDirection: 'row',
     marginTop: 8,
-    backgroundColor: "aliceblue",
+    backgroundColor: 'aliceblue',
   },
 });
 
