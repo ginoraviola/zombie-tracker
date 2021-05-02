@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import axios from "axios";
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import RoomItem from "../components/RoomItem";
 
 export interface IRoom {
@@ -10,29 +11,28 @@ export interface IRoom {
 
 const Home = () => {
   const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Do Request to backend.
-    setLocations([
-      {
-        key: 'school-key',
-        label: 'School',
-        zombies: ['zs1','zs2','zs3','zs4','zs5','zs6']
-      },
-      {
-        key: 'warehouse-key',
-        label: 'Warehouse',
-        zombies: ['zw1','zw2','zw3','zw4']
-      },
-      {
-        key: 'hospital-key',
-        label: 'Hospital',
-        zombies: ['zs1','zs2','zs3','zs4']
-      },
-    ])
+     fetchLocations();
   }, []);
 
-  return (
+  const fetchLocations = async () => {
+    try {
+      const {data} = await axios.get(`http://192.168.1.22:5000/locations`);
+      console.log(data);
+      await setLocations([...data]);
+      await setLoading(false);
+    } catch (e) {
+      console.warn('Error fetching locations');
+    }
+  }
+
+  return loading ? (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="steelblue" />
+      </View>
+  ) : (
       <>
         <View style={styles.container}>
           {locations.map(room => (
