@@ -1,22 +1,42 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Dimensions, Image} from 'react-native';
+import React, { useState} from 'react';
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import {IRoom} from "./Home";
 import Zombie from "../components/Zombie";
 import MoveZombieDialog from "../components/MoveZombieDialog";
 
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 const RoomView = (props: IRoom) => {
-  const {label, zombies} = props.route.params.room;
+  const [showZombieDialog, setShowZombieDialog] = useState(null);
+  const {room, locations} = props.route.params;
+  const {label, zombies} = room;
+
+  const dialogOptions = locations.filter(l => l.key !== room.key);
+
+  const toggleDialog = async (zombieKey) => {
+    await setShowZombieDialog(zombieKey);
+  }
 
   return (
       <View style={styles.container}>
-        <Text style={styles.text}>Zombies: {zombies.length}</Text>
-        <Text style={styles.text}>{label}</Text>
+        <View style={styles.titleView}>
+          <Text style={[styles.text, styles.title]}>{label}</Text>
+          <Text style={[styles.subtitle]}>Zombies: {zombies.length}</Text>
+        </View>
         {zombies.map((z,index) => (
-            <Zombie key={z} index={index} />
+            <View key={z}>
+            <Zombie index={index}
+                    zombie={z}
+                    onZombieClicked={toggleDialog}
+            />
+              {showZombieDialog && showZombieDialog === z && (
+                  <MoveZombieDialog availableOptions={dialogOptions}
+                                    onCloseDialog={toggleDialog}
+                  />
+              )
+              }
+            </View>
         ))}
-        <MoveZombieDialog />
       </View>
   )
 };
@@ -29,6 +49,17 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 15,
     height: height - 100,
+  },
+  titleView: {
+    flexDirection: 'column'
+  },
+  title: {
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'black',
   },
   text: {
     color: 'black',

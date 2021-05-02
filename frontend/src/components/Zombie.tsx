@@ -15,6 +15,7 @@ const BOTTOM_BOUND = height - MARGIN - ZOMBIE_SIZE/2 -400;
 
 
 const Zombie = (props) => {
+  console.log({props});
 
   const {gestureHandler, translation, velocity, state} = usePanGestureHandler();
   const upper = -HEIGHT/2 * props.index + ZOMBIE_SIZE/2 + MARGIN/2;
@@ -24,7 +25,7 @@ const Zombie = (props) => {
   }
 
   const onZombieClicked = () => {
-
+    props.onZombieClicked(props.zombie);
   }
 
   const y =
@@ -62,10 +63,6 @@ const Zombie = (props) => {
 };
 
 const styles = StyleSheet.create({
-  text: {
-    color: 'black',
-    fontSize: 52,
-  }
 });
 
 export default Zombie;
