@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {IRoom} from "../screens/Home";
 
 
@@ -9,9 +10,10 @@ interface IRoomProps {
 }
 
 const RoomItem = (props) => {
+  const navigation = useNavigation();
 
   const onEnterRoom = () => {
-    //  TODO: Enter new view.
+    navigation.navigate('Room', {room: props.room });
   }
 
   return (
