@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {Alert, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {relocateZombie, removeZombie} from '../api';
 
 const MoveZombieDialog = ({availableOptions, zombie, room, onRemoveZombieCb, onCloseDialog}) => {
@@ -50,7 +50,7 @@ const MoveZombieDialog = ({availableOptions, zombie, room, onRemoveZombieCb, onC
           <View style={styles.buttonsContainer}>
             <View style={{flexDirection: 'row'}}>
               {availableOptions.map((option, index) => (
-                <Pressable
+                <TouchableOpacity
                   key={index}
                   style={[
                     styles.button,
@@ -58,21 +58,21 @@ const MoveZombieDialog = ({availableOptions, zombie, room, onRemoveZombieCb, onC
                   ]}
                   onPress={() => onRelocateZombie(option)}>
                   <Text style={styles.textStyle}>{option.label}</Text>
-                </Pressable>
+                </TouchableOpacity>
               ))}
             </View>
 
-            <Pressable
+            <TouchableOpacity
               style={[styles.button, {backgroundColor: 'darkred'}]}
               onPress={() => onRemoveZombie()}>
               <Text style={styles.textStyle}>Kill Zombie</Text>
-            </Pressable>
+            </TouchableOpacity>
 
-            <Pressable
+            <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
               onPress={() => onClose()}>
               <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
