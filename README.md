@@ -2,6 +2,8 @@
 ---
 ### Installation
 #### Backend
+:bulb: This part is not really necessary , since the API is being hosted in Heroku at https://zombietrack.herokuapp.com/ 
+
 ``cd backend/ && yarn install``
 
 ``yarn start``

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({baseURL: 'http://192.168.1.119:5000'});
+const API = axios.create({baseURL: 'https://zombietrack.herokuapp.com/'});
 
 export const getLocations = () => API.get('/locations');
 export const getLocationInfo = id => API.get(`/location/${id}`);
