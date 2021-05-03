@@ -27,7 +27,6 @@ export const moveZombie = async (req, res) => {
     } catch (e) {
         res.status(400).json({message: 'Error relocating zombie'});
     }
-    console.log(req);
     res.send(200);
 }
 
