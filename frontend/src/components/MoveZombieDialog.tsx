@@ -19,6 +19,7 @@ const MoveZombieDialog = ({
   onRemoveZombieCb,
   onCloseDialog,
 }: IMoveZombieDialogInterface) => {
+
   const onClose = (): void => {
     onCloseDialog(null);
   };
