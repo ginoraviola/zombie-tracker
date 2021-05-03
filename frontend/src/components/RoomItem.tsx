@@ -4,14 +4,15 @@ import {useNavigation} from '@react-navigation/native';
 import {IRoom} from '../screens/Home';
 
 interface IRoomProps {
-  navigation: Object;
+  label: string;
   room: IRoom;
+  locations: IRoom[];
 }
 
-const RoomItem = props => {
+const RoomItem = (props: IRoomProps) => {
   const navigation = useNavigation();
 
-  const onEnterRoom = () => {
+  const onEnterRoom = (): void => {
     navigation.navigate('Room', {room: props.room, locations: props.locations});
   };
 

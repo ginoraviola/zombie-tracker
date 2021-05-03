@@ -1,48 +1,56 @@
 import React from 'react';
-import {Alert, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {relocateZombie, removeZombie} from '../api';
+import {IRoom} from '../screens/Home';
+import Toast from 'react-native-simple-toast';
 
-const MoveZombieDialog = ({availableOptions, zombie, room, onRemoveZombieCb, onCloseDialog}) => {
-  const onClose = () => {
+interface IMoveZombieDialogInterface {
+  availableOptions: IRoom[];
+  zombie: string;
+  room: IRoom;
+  onRemoveZombieCb: Function;
+  onCloseDialog: Function;
+}
+
+const MoveZombieDialog = ({
+  availableOptions,
+  zombie,
+  room,
+  onRemoveZombieCb,
+  onCloseDialog,
+}: IMoveZombieDialogInterface) => {
+  const onClose = (): void => {
     onCloseDialog(null);
   };
 
-  const onRemoveZombie = async () => {
+  const onRemoveZombie = async (): Promise<void> => {
     try {
       onRemoveZombieCb(zombie);
-      const {data} = await removeZombie({zombie, room: room.key});
-      console.log({data});
+      await removeZombie({zombie, room: room.key});
+      Toast.show('Zombie killed', Toast.LONG);
     } catch ({response}) {
-      console.warn(response.data.message);
+      Toast.show('Missed shot! could not kill zombie.', Toast.LONG);
     }
     onClose();
   };
 
-  const onRelocateZombie = async location => {
-    console.log('called');
+  const onRelocateZombie = async (location: IRoom): Promise<void> => {
     onRemoveZombieCb(zombie);
     try {
-      const {data} = await relocateZombie({
+      await relocateZombie({
         zombie,
         room: room.key,
         newLocation: location.key,
       });
-      console.log({data});
+      Toast.show('Zombie Relocated successfully.', Toast.LONG);
     } catch ({response}) {
-      console.warn(response.data.message);
+      Toast.show('Ups. error relocating zombie', Toast.LONG);
     }
     onClose();
   };
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={true}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        onClose();
-      }}>
+    <Modal animationType="slide" transparent={true} visible={true}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Move zombie to other location:</Text>

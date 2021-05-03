@@ -1,16 +1,14 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Dimensions, Text, Image, TouchableOpacity} from 'react-native';
-import Animated, {Easing, EasingNode} from 'react-native-reanimated';
+import Animated, {EasingNode} from 'react-native-reanimated';
 import {PanGestureHandler} from 'react-native-gesture-handler';
 import {
   diffClamp,
   usePanGestureHandler,
   withDecay,
   useValue,
-  withOffset,
 } from 'react-native-redash/lib/module/v1';
 
-const {add, cond, eq, set, Value} = Animated;
 import {VIEW_MARGIN} from '../screens/RoomView';
 
 const {width, height} = Dimensions.get('window');
@@ -23,24 +21,24 @@ interface IZombieProps {
   zombie: number;
 }
 
-const Zombie = ({index, onZombieClicked, zombie}: IZombieProps) => {
+const Zombie = ({onZombieClicked, zombie}: IZombieProps) => {
   const {gestureHandler, translation, velocity, state} = usePanGestureHandler();
 
-  const upperBound = 0;
-  const lowerBound = height - VIEW_MARGIN - ZOMBIE_SIZE - MARGIN;
-  const leftBound = -width / 2 + ZOMBIE_SIZE / 2;
-  const rightBound = width / 2 - ZOMBIE_SIZE / 2;
+  const upperBound: number = 0;
+  const lowerBound: number = height - VIEW_MARGIN - ZOMBIE_SIZE - MARGIN;
+  const leftBound: number = -width / 2 + ZOMBIE_SIZE / 2;
+  const rightBound: number = width / 2 - ZOMBIE_SIZE / 2;
 
   // Set the initial values for X and Y - Randomly generated
-  let x = useValue(
+  let x: Animated.Value<number> = useValue(
     Math.floor(Math.random() * (rightBound - leftBound) + leftBound),
   );
 
-  let y = useValue(
+  let y: Animated.Value<number> = useValue(
     Math.floor(Math.random() * (upperBound - lowerBound) + lowerBound),
   );
 
-  const onClicked = () => {
+  const onClicked = (): void => {
     onZombieClicked(zombie);
   };
 
@@ -63,21 +61,21 @@ const Zombie = ({index, onZombieClicked, zombie}: IZombieProps) => {
     upperBound,
     lowerBound,
   );
-  const animateZombie = () => {
+  const animateZombie = useCallback(() => {
     Animated.timing(translation.x, {
-      toValue: withOffset(x, state),
+      toValue: x,
       duration: 2000,
       easing: EasingNode.linear,
     }).start();
 
     Animated.timing(translation.y, {
-      toValue: withOffset(y, state),
+      toValue: y,
       duration: 2000,
       easing: EasingNode.linear,
     }).start();
-  };
+  }, [translateY, translateX]);
 
-  useEffect(() => {
+  useEffect((): void => {
     animateZombie();
   }, []);
 

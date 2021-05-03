@@ -13,13 +13,13 @@ const Home = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     const result = await getLocations();
     await setLocations(result.data);
     await setLoading(false);
   };
 
-  useEffect(() => {
+  useEffect((): void => {
     fetchData();
   }, [locations]);
 

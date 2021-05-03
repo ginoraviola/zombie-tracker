@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {IRoom} from './Home';
 import Zombie from '../components/Zombie';
 import MoveZombieDialog from '../components/MoveZombieDialog';
@@ -13,32 +8,31 @@ import {getLocationInfo} from '../api';
 export const VIEW_MARGIN = 20;
 
 const RoomView = (props: IRoom) => {
-  const [showZombieDialog, setShowZombieDialog] = useState(null);
+  const [showZombieDialog, setShowZombieDialog] = useState();
   const [loading, setLoading] = useState(true);
   const [zombies, setZombies] = useState([]);
 
   const {room, locations} = props.route.params;
   const {label} = room;
 
-  const fetchLocationData = async () => {
-    console.log('called');
+  const fetchLocationData = async (): Promise<void> => {
     const result = await getLocationInfo(room.key);
     await setZombies(result.data.zombies);
     await setLoading(false);
   };
 
-  const removeZombieFromLocation = async zombie => {
+  const removeZombieFromLocation = async (zombie: string): Promise<void> => {
     const newZombies = zombies.filter(z => z !== zombie);
     await setZombies(newZombies);
   };
 
-  useEffect(() => {
+  useEffect((): void => {
     fetchLocationData();
   }, []);
 
   const dialogOptions = locations.filter(l => l.key !== room.key);
 
-  const toggleDialog = async zombieKey => {
+  const toggleDialog = async (zombieKey: string): Promise<void> => {
     await setShowZombieDialog(zombieKey);
   };
 
