@@ -1,13 +1,16 @@
-import React from 'react';
-import {Dimensions, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import Animated from 'react-native-reanimated';
+import React, {useEffect, useMemo, useState} from 'react';
+import {Dimensions, Text, Image, TouchableOpacity} from 'react-native';
+import Animated, {Easing, EasingNode} from 'react-native-reanimated';
 import {PanGestureHandler} from 'react-native-gesture-handler';
 import {
   diffClamp,
   usePanGestureHandler,
   withDecay,
+  useValue,
+  withOffset,
 } from 'react-native-redash/lib/module/v1';
 
+const {add, cond, eq, set, Value} = Animated;
 import {VIEW_MARGIN} from '../screens/RoomView';
 
 const {width, height} = Dimensions.get('window');
@@ -23,26 +26,25 @@ interface IZombieProps {
 const Zombie = ({index, onZombieClicked, zombie}: IZombieProps) => {
   const {gestureHandler, translation, velocity, state} = usePanGestureHandler();
 
-  const upperBound = -height / 2 + ZOMBIE_SIZE / 2 + MARGIN / 2;
-  const lowerBound = height / 2 - ZOMBIE_SIZE / 2 - MARGIN / 2;
-  const leftBound = 0 - index * ZOMBIE_SIZE;
-  const rightBound = width - VIEW_MARGIN - ZOMBIE_SIZE;
+  const upperBound = 0;
+  const lowerBound = height - VIEW_MARGIN - ZOMBIE_SIZE - MARGIN;
+  const leftBound = -width / 2 + ZOMBIE_SIZE / 2;
+  const rightBound = width / 2 - ZOMBIE_SIZE / 2;
+
+  // Set the initial values for X and Y - Randomly generated
+  let x = useValue(
+    Math.floor(Math.random() * (rightBound - leftBound) + leftBound),
+  );
+
+  let y = useValue(
+    Math.floor(Math.random() * (upperBound - lowerBound) + lowerBound),
+  );
 
   const onClicked = () => {
     onZombieClicked(zombie);
   };
 
-  const y = diffClamp(
-    withDecay({
-      value: translation.y,
-      velocity: velocity.y,
-      state,
-    }),
-    upperBound,
-    lowerBound,
-  );
-
-  const x = diffClamp(
+  const translateX = diffClamp(
     withDecay({
       value: translation.x,
       velocity: velocity.x,
@@ -52,14 +54,41 @@ const Zombie = ({index, onZombieClicked, zombie}: IZombieProps) => {
     rightBound,
   );
 
+  const translateY = diffClamp(
+    withDecay({
+      value: translation.y,
+      velocity: velocity.y,
+      state,
+    }),
+    upperBound,
+    lowerBound,
+  );
+  const animateZombie = () => {
+    Animated.timing(translation.x, {
+      toValue: withOffset(x, state),
+      duration: 2000,
+      easing: EasingNode.linear,
+    }).start();
+
+    Animated.timing(translation.y, {
+      toValue: withOffset(y, state),
+      duration: 2000,
+      easing: EasingNode.linear,
+    }).start();
+  };
+
+  useEffect(() => {
+    animateZombie();
+  }, []);
+
   return (
     <>
       <PanGestureHandler {...gestureHandler}>
         <Animated.View
           style={{
-            alignItems: 'center',
-            transform: [{translateY: y}, {translateX: x}],
+            transform: [{translateX}, {translateY}],
           }}>
+          <Text>{translation.x.value}</Text>
           <TouchableOpacity onPress={() => onClicked()}>
             <Image
               source={require('../assets/zombie.png')}
