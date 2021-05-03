@@ -2,17 +2,17 @@ let locations = [
     {
         key: 'school-key',
         label: 'School',
-        zombies: ['zs1','zs2','zs3','zs4','zs5','zs6']
+        zombies: []
     },
     {
         key: 'warehouse-key',
         label: 'Warehouse',
-        zombies: ['zw1','zw2','zw3','zw4']
+        zombies: []
     },
     {
         key: 'hospital-key',
         label: 'Hospital',
-        zombies: ['zs1','zs2','zs3','zs4']
+        zombies: []
     },
 ];
 
