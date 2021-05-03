@@ -1,7 +1,7 @@
 # zombie-tracker
-<img src="./rooms.jpeg" width="540" height="1080">
-<img src="./room.jpeg" width="540" height="1080">
-<img src="./dialog.jpeg" width="540" height="1080">
+<img src="./rooms.jpeg" width="250" height="400">
+<img src="./room.jpeg" width="250" height="400">
+<img src="./dialog.jpeg" width="250" height="400">
 
 ### Installation
 #### Backend
