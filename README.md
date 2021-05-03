@@ -1,5 +1,12 @@
 # zombie-tracker
 ---
+We've got the zombies under control, but we need to keep track of them. That's where you come in. We need you to build an app for us. A Zombie Manager.
+
+We can quarantine zombies in three locations: the hospital, the school, and the warehouse. We need the app to keep track of where each zombie is being held, how many zombies are in each location, and we need to be able to move zombies between the locations.
+
+This needs to be a fully-functional app with a separate front-end and back-end. The front-end should communicate with the back-end via an API.
+
+
 ### Installation
 #### Backend
 :bulb: This part is not really necessary , since the API is being hosted in Heroku at https://zombietrack.herokuapp.com/ 
